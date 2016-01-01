@@ -494,6 +494,7 @@
 				B3A5DE1B1C34C26200E5B02C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B3A5DE1C1C34C26200E5B02C /* Build configuration list for PBXNativeTarget "BattleshipTests" */ = {
 			isa = XCConfigurationList;
@@ -502,6 +503,7 @@
 				B3A5DE1E1C34C26200E5B02C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B3A5DE1F1C34C26200E5B02C /* Build configuration list for PBXNativeTarget "BattleshipUITests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +512,7 @@
 				B3A5DE211C34C26200E5B02C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
