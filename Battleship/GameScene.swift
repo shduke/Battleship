@@ -35,31 +35,23 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.locationInNode(self)
             
-            let sprite = Phage(coordinate: location, size: CGSize(width: 100, height: 100), rechargeTime: 10)
+            let sprite = Phage(coordinate: location, team: "Blue")
             self.addChild(sprite)
             
             let strengthLabel = SKLabelNode(fontNamed: "Arial")
             strengthLabel.fontSize = 45;
             strengthLabel.fontColor = UIColor.blackColor()
-<<<<<<< HEAD
             strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame));
-=======
             strengthLabel.position = sprite.coordinate;
->>>>>>> origin/master
             strengthLabel.zPosition = 1;
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
                 strengthLabel.text = String(sprite.strength);
-<<<<<<< HEAD
                 sprite.strength++
-=======
                 if let strengthString = strengthLabel.text, strength = Int(strengthString) {
                     sprite.strength = strength
                 }
-                //if let odoString = odoString, odoInt = Int(odoString) {
-                
->>>>>>> origin/master
             })
             // repeats sequence forever
             strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))

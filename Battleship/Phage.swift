@@ -14,7 +14,7 @@ import SpriteKit
 class Phage: SKSpriteNode {
     var coordinate: CGPoint
     var strength: Int = 0
-    var rechargeTime: Int
+    var rechargeTime: Int = 0
     var team: String
     
     
@@ -27,6 +27,20 @@ class Phage: SKSpriteNode {
             return UIColor.redColor()
         default:
             return UIColor.grayColor()
+        }
+    }
+    
+    func getTeamValues(team: String) {
+        switch team {
+        case "Blue":
+            strength = 100
+            rechargeTime = 1
+        case "Red":
+            strength = 100
+            rechargeTime = 1
+        default:
+            strength = 0
+            rechargeTime = 0
         }
     }
     
@@ -46,10 +60,8 @@ class Phage: SKSpriteNode {
     }
     
     /* Initializes the cell */
-    init(coordinate: CGPoint, strength: Int, rechargeTime: Int, team: String = "None") {
+    init(coordinate: CGPoint, team: String = "None") {
         self.coordinate = coordinate
-        self.strength = strength
-        self.rechargeTime = rechargeTime
         self.team = team
         let texture = SKTexture(imageNamed: "phageGray")
         super.init(texture: texture, color: UIColor.grayColor(), size: CGSize(width: 100, height: 100))
@@ -57,6 +69,7 @@ class Phage: SKSpriteNode {
         self.position = coordinate
         self.zPosition = 0
         self.color = getColor(team)
+        getTeamValues(team)
     }
 
     required init?(coder aDecoder: NSCoder) {
