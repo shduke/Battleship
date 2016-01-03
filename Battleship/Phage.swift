@@ -39,9 +39,11 @@ class Phage: SKSpriteNode {
     /* Initializes the cell */
     init(coordinate: CGPoint, size: CGSize, rechargeTime: Int, team: String = "None") {
         self.coordinate = coordinate
-        super.init(texture: nil, color: getColor(team), size: size)
+        self.rechargeTime = rechargeTime
+        self.team = team
+        super.init(texture: nil, color: UIColor.grayColor(), size: size)
         self.strength = getStrength(size)
-        //strength
+        self.color = getColor(team)
     }
 
     required init?(coder aDecoder: NSCoder) {
