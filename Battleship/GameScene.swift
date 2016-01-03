@@ -13,7 +13,7 @@ class GameScene: SKScene {
         
         /* timer */
         // setup
-        let scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        let scoreLabel = SKLabelNode(fontNamed: "Arial")
         scoreLabel.fontSize = 45;
         scoreLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
         // wait one second between each increment
@@ -38,10 +38,11 @@ class GameScene: SKScene {
             let sprite = Phage(coordinate: location, size: CGSize(width: 100, height: 100), rechargeTime: 10)
             self.addChild(sprite)
             
-            let strengthLabel = SKLabelNode(fontNamed: "Chalkduster")
+            let strengthLabel = SKLabelNode(fontNamed: "Arial")
             strengthLabel.fontSize = 45;
             strengthLabel.color = UIColor.blackColor()
             strengthLabel.position = sprite.coordinate;
+            strengthLabel.zPosition = 1;
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
@@ -50,6 +51,7 @@ class GameScene: SKScene {
             })
             // repeats sequence forever
             strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
+            // add node to scene
             self.addChild(strengthLabel);
         }
     }
