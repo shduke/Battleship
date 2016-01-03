@@ -40,17 +40,17 @@ class GameScene: SKScene {
             
             let strengthLabel = SKLabelNode(fontNamed: "Arial")
             strengthLabel.fontSize = 45;
-            strengthLabel.color = UIColor.blackColor()
-            strengthLabel.position = sprite.coordinate;
+            strengthLabel.fontColor = UIColor.blackColor()
+            strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame));
             strengthLabel.zPosition = 1;
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
-                sprite.strength++
                 strengthLabel.text = String(sprite.strength);
+                sprite.strength++
             })
             // repeats sequence forever
-            strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
+            strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))
             // add node to scene
             self.addChild(strengthLabel);
         }
