@@ -12,7 +12,7 @@ import SpriteKit
 
 
 class Phage: SKSpriteNode {
-   var coordinate: CGPoint
+    var coordinate: CGPoint
     var strength: Int = 0
     var rechargeTime: Int
     var team: String
@@ -34,23 +34,6 @@ class Phage: SKSpriteNode {
     private func getStrength(size: CGSize) -> Int {
         let radius = Int(size.width / 2)
         return radius * 10
-    }
-    
-    func updateStrengthLabel() {
-        let strengthLabel = SKLabelNode(fontNamed: "Chalkduster")
-        strengthLabel.fontSize = 45;
-        strengthLabel.position = self.position;
-        // wait one second between each increment
-        let actionwait = SKAction.waitForDuration(Double(self.rechargeTime))
-        // increment timer
-        let actionrun = SKAction.runBlock({
-            self.strength++
-            strengthLabel.text = String(self.strength);
-        })
-        // repeats sequence forever
-        strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
-        // add node to scene
-        self.addChild(strengthLabel);
     }
     
     /* Initializes the cell */

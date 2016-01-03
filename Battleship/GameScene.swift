@@ -43,18 +43,15 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.locationInNode(self)
             
-   /*         let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-     */
             let sprite = Phage(coordinate: location, size: CGSize(width: 100, height: 100), rechargeTime: 10)
             self.addChild(sprite)
+            let strengthLabel = SKLabelNode(fontNamed: "Chalkduster")
+            strengthLabel.fontSize = 45;
+            strengthLabel.color = UIColor.blackColor()
+            strengthLabel.position = sprite.coordinate;
+            strengthLabel.text = String(sprite.strength);
+            // add node to scene
+            self.addChild(strengthLabel);
         }
     }
    
