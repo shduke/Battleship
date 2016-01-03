@@ -36,6 +36,23 @@ class Phage: SKSpriteNode {
         return radius * 10
     }
     
+    func updateStrengthLabel() {
+        let strengthLabel = SKLabelNode(fontNamed: "Chalkduster")
+        strengthLabel.fontSize = 45;
+        strengthLabel.position = self.position;
+        // wait one second between each increment
+        let actionwait = SKAction.waitForDuration(Double(self.rechargeTime))
+        // increment timer
+        let actionrun = SKAction.runBlock({
+            self.strength++
+            strengthLabel.text = String(self.strength);
+        })
+        // repeats sequence forever
+        strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
+        // add node to scene
+        self.addChild(strengthLabel);
+    }
+    
     /* Initializes the cell */
     init(coordinate: CGPoint, size: CGSize, rechargeTime: Int, team: String = "None") {
         self.coordinate = coordinate
