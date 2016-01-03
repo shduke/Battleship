@@ -14,20 +14,20 @@ class GameScene: SKScene {
         /* timer */
         // setup
         let scoreLabel = SKLabelNode(fontNamed: "Arial")
-        scoreLabel.fontSize = 45;
-        scoreLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
+        scoreLabel.fontSize = 45
+        scoreLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
         // wait one second between each increment
         let actionwait = SKAction.waitForDuration(1.0)
         var timesecond = Int()
         // increment timer
         let actionrun = SKAction.runBlock({
             timesecond++
-            scoreLabel.text = String(timesecond);
+            scoreLabel.text = String(timesecond)
         })
         // repeats sequence forever
         scoreLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
         // add node to scene
-        self.addChild(scoreLabel);
+        self.addChild(scoreLabel)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -41,22 +41,22 @@ class GameScene: SKScene {
             let strengthLabel = SKLabelNode(fontNamed: "Arial")
             strengthLabel.fontSize = 45;
             strengthLabel.fontColor = UIColor.blackColor()
-            strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame));
-            strengthLabel.position = sprite.coordinate;
-            strengthLabel.zPosition = 1;
+            strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame))
+            strengthLabel.position = sprite.coordinate
+            strengthLabel.zPosition = 1
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
-                strengthLabel.text = String(sprite.strength);
+                strengthLabel.text = String(sprite.strength)
                 sprite.strength++
-                if let strengthString = strengthLabel.text, strength = Int(strengthString) {
+                /*if let strengthString = strengthLabel.text, strength = Int(strengthString) {
                     sprite.strength = strength
-                }
+                }*/
             })
             // repeats sequence forever
             strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))
             // add node to scene
-            self.addChild(strengthLabel);
+            self.addChild(strengthLabel)
             
         }
     }
