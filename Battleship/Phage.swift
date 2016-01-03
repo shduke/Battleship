@@ -58,7 +58,9 @@ class Phage: SKSpriteNode {
         self.coordinate = coordinate
         self.rechargeTime = rechargeTime
         self.team = team
-        super.init(texture: nil, color: UIColor.grayColor(), size: size)
+        let texture = SKTexture(imageNamed: "phageGray")
+        super.init(texture: texture, color: UIColor.grayColor(), size: CGSize(width: 100, height: 100))
+        self.position = coordinate
         self.strength = getStrength(size)
         self.color = getColor(team)
     }

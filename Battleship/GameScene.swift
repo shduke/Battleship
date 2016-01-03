@@ -43,7 +43,7 @@ class GameScene: SKScene {
         for touch in touches {
             let location = touch.locationInNode(self)
             
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+   /*         let sprite = SKSpriteNode(imageNamed:"Spaceship")
             
             sprite.xScale = 0.5
             sprite.yScale = 0.5
@@ -52,7 +52,8 @@ class GameScene: SKScene {
             let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
             
             sprite.runAction(SKAction.repeatActionForever(action))
-            
+     */
+            let sprite = Phage(coordinate: location, size: CGSize(width: 100, height: 100), rechargeTime: 10)
             self.addChild(sprite)
         }
     }
