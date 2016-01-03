@@ -12,11 +12,11 @@ import SpriteKit
 
 
 class Phage: SKSpriteNode {
+    
     var coordinate: CGPoint
     var strength: Int = 0
     var rechargeTime: Int = 0
     var team: String
-    
     
     /* Gets the color for the cell  */
    /* private func getColor(color: String) -> UIColor {
@@ -33,18 +33,19 @@ class Phage: SKSpriteNode {
     func getTeamValues(team: String) {
         switch team {
         case "Blue":
-            strength = 100
-            rechargeTime = 1
-            texture = SKTexture(imageNamed: "phageBlue")
+            self.strength = 100
+            self.rechargeTime = 1
+            self.texture = SKTexture(imageNamed: "phageBlue")
         case "Red":
-            strength = 100
-            rechargeTime = 1
-            texture = SKTexture(imageNamed: "phageRed")
+            self.strength = 100
+            self.rechargeTime = 1
+            self.texture = SKTexture(imageNamed: "phageRed")
         default:
-            strength = 0
-            rechargeTime = 0
-            texture = SKTexture(imageNamed: "phageGray")
+            self.strength = 0
+            self.rechargeTime = 0
+            self.texture = SKTexture(imageNamed: "phageGray")
         }
+        self.size = getSize(self.strength)
     }
     
     /* Calculates the strength of the cell */
@@ -68,7 +69,6 @@ class Phage: SKSpriteNode {
         self.team = team
         let texture = SKTexture(imageNamed: "phageGray")
         super.init(texture: texture, color: UIColor.grayColor(), size: CGSize(width: 100, height: 100))
-        self.size = getSize(self.strength)
         self.position = coordinate
         self.zPosition = 0
        /// self.color = getColor(team)
