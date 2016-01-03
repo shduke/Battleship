@@ -19,7 +19,7 @@ class Phage: SKSpriteNode {
     
     
     /* Gets the color for the cell  */
-    private func getColor(color: String) -> UIColor {
+   /* private func getColor(color: String) -> UIColor {
         switch color {
         case "Blue":
              return UIColor.blueColor()
@@ -28,19 +28,22 @@ class Phage: SKSpriteNode {
         default:
             return UIColor.grayColor()
         }
-    }
+    }*/
     
     func getTeamValues(team: String) {
         switch team {
         case "Blue":
             strength = 100
             rechargeTime = 1
+            texture = SKTexture(imageNamed: "phageBlue")
         case "Red":
             strength = 100
             rechargeTime = 1
+            texture = SKTexture(imageNamed: "phageRed")
         default:
             strength = 0
             rechargeTime = 0
+            texture = SKTexture(imageNamed: "phageGray")
         }
     }
     
@@ -68,7 +71,7 @@ class Phage: SKSpriteNode {
         self.size = getSize(self.strength)
         self.position = coordinate
         self.zPosition = 0
-        self.color = getColor(team)
+       /// self.color = getColor(team)
         getTeamValues(team)
     }
 
