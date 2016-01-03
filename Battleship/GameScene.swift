@@ -53,6 +53,7 @@ class GameScene: SKScene {
             strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))
             // add node to scene
             self.addChild(strengthLabel);
+            
         }
     }
    

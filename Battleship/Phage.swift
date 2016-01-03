@@ -31,21 +31,31 @@ class Phage: SKSpriteNode {
     }
     
     /* Calculates the strength of the cell */
-    private func getStrength(size: CGSize) -> Int {
-        let radius = Int(size.width / 2)
-        return radius * 10
+    private func getSize(strength: Int) -> CGSize {
+        return CGSize(width: strength/20, height: strength/20)
+    }
+    
+    func transferStrength(phage: Phage) -> Bool {
+        if (self.strength == 0) {
+            return false;
+        }
+        let transfered = Int(self.strength / 2)
+        self.strength = Int(self.strength / 2)
+        phage.strength += transfered
+        return true
     }
     
     /* Initializes the cell */
-    init(coordinate: CGPoint, size: CGSize, rechargeTime: Int, team: String = "None") {
+    init(coordinate: CGPoint, strength: Int, rechargeTime: Int, team: String = "None") {
         self.coordinate = coordinate
+        self.strength = strength
         self.rechargeTime = rechargeTime
         self.team = team
         let texture = SKTexture(imageNamed: "phageGray")
         super.init(texture: texture, color: UIColor.grayColor(), size: CGSize(width: 100, height: 100))
+        self.size = getSize(self.strength)
         self.position = coordinate
         self.zPosition = 0
-        self.strength = getStrength(size)
         self.color = getColor(team)
     }
 
