@@ -10,13 +10,6 @@ import SpriteKit
 
 class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-        
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello World!";
-        myLabel.fontSize = 45;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-        self.addChild(myLabel);
         
         /* timer */
         // setup
@@ -38,19 +31,25 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-       /* Called when a touch begins */
         
         for touch in touches {
             let location = touch.locationInNode(self)
             
             let sprite = Phage(coordinate: location, size: CGSize(width: 100, height: 100), rechargeTime: 10)
             self.addChild(sprite)
+            
             let strengthLabel = SKLabelNode(fontNamed: "Chalkduster")
             strengthLabel.fontSize = 45;
             strengthLabel.color = UIColor.blackColor()
             strengthLabel.position = sprite.coordinate;
-            strengthLabel.text = String(sprite.strength);
-            // add node to scene
+            let actionwait = SKAction.waitForDuration(1.0)
+            // increment timer
+            let actionrun = SKAction.runBlock({
+                sprite.strength++
+                strengthLabel.text = String(sprite.strength);
+            })
+            // repeats sequence forever
+            strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionwait,actionrun])))
             self.addChild(strengthLabel);
         }
     }
