@@ -12,24 +12,18 @@ import SpriteKit
 
 
 class Phage: SKSpriteNode {
-    
+    lazy var strengthLabel = SKLabelNode(fontNamed: "Arial")
     var coordinate: CGPoint
-    var strength: Int = 0
+    var strength: Int = 0 {
+        didSet {
+            size = getSize(strength)
+            strengthLabel.fontSize = CGFloat(strength/2)
+        }
+    }
     var rechargeTime: Int = 0
     var team: String
     
-    /* Gets the color for the cell  */
-   /* private func getColor(color: String) -> UIColor {
-        switch color {
-        case "Blue":
-             return UIColor.blueColor()
-        case "Red":
-            return UIColor.redColor()
-        default:
-            return UIColor.grayColor()
-        }
-    }*/
-    
+    /* assigns the appropriate values to each team */
     func getTeamValues(team: String) {
         switch team {
         case "Blue":
@@ -50,7 +44,7 @@ class Phage: SKSpriteNode {
     
     /* Calculates the strength of the cell */
     private func getSize(strength: Int) -> CGSize {
-        return CGSize(width: strength/20, height: strength/20)
+        return CGSize(width: strength, height: strength)
     }
     
     func transferStrength(phage: Phage) -> Bool {

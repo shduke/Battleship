@@ -39,11 +39,14 @@ class GameScene: SKScene {
             self.addChild(sprite)
             
             let strengthLabel = SKLabelNode(fontNamed: "Arial")
-            strengthLabel.fontSize = 45;
+            
+            sprite.strengthLabel = strengthLabel
+            strengthLabel.fontSize = CGFloat(sprite.strength/2)
             strengthLabel.fontColor = UIColor.blackColor()
             strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame))
-            strengthLabel.position = sprite.coordinate
+            strengthLabel.position = labelLocation(sprite.coordinate, size: sprite.size)
             strengthLabel.zPosition = 1
+
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
@@ -61,6 +64,14 @@ class GameScene: SKScene {
         }
     }
    
+    func labelLocation(phageCoordinate: CGPoint, size: CGSize) -> CGPoint {
+        let x = phageCoordinate.x
+        var y = phageCoordinate.y
+        y = y - size.height * 0.15
+        let newPoint: CGPoint = CGPoint(x: x, y: y)
+        return newPoint
+    }
+    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
