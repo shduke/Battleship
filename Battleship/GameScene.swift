@@ -34,36 +34,38 @@ class GameScene: SKScene {
         
         for touch in touches {
             let location = touch.locationInNode(self)
+            let sprite = Phage(scene: self, coordinate: location, team: "Blue")
             
-            let sprite = Phage(coordinate: location, team: "Blue")
+            /* How can we put this inside the Phage class? */
+            self.addChild(sprite)
+            self.addChild(sprite.strengthLabel)
+            
+            /*
             self.addChild(sprite)
             
             let strengthLabel = SKLabelNode(fontNamed: "Arial")
-            
             sprite.strengthLabel = strengthLabel
             strengthLabel.fontSize = CGFloat(sprite.strength/2)
             strengthLabel.fontColor = UIColor.blackColor()
             strengthLabel.position = CGPoint(x:CGRectGetMidX(sprite.frame), y:CGRectGetMidY(sprite.frame))
-            strengthLabel.position = labelLocation(sprite.coordinate, size: sprite.size)
+            //strengthLabel.position = labelLocation(sprite.coordinate, size: sprite.size)
             strengthLabel.zPosition = 1
+            strengthLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+            strengthLabel.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
 
             let actionwait = SKAction.waitForDuration(1.0)
             // increment timer
             let actionrun = SKAction.runBlock({
-                strengthLabel.text = String(sprite.strength)
+                sprite.strengthLabel.text = String(sprite.strength)
                 sprite.strength++
-                /*if let strengthString = strengthLabel.text, strength = Int(strengthString) {
-                    sprite.strength = strength
-                }*/
             })
             // repeats sequence forever
-            strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))
+            sprite.strengthLabel.runAction(SKAction.repeatActionForever(SKAction.sequence([actionrun,actionwait])))
             // add node to scene
-            self.addChild(strengthLabel)
-            
+*/
         }
     }
-   
+   /*
     func labelLocation(phageCoordinate: CGPoint, size: CGSize) -> CGPoint {
         let x = phageCoordinate.x
         var y = phageCoordinate.y
@@ -71,6 +73,7 @@ class GameScene: SKScene {
         let newPoint: CGPoint = CGPoint(x: x, y: y)
         return newPoint
     }
+    */
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
