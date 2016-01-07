@@ -17,6 +17,7 @@
 		B3A5DE0A1C34C26200E5B02C /* BattleshipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DE091C34C26200E5B02C /* BattleshipTests.swift */; };
 		B3A5DE151C34C26200E5B02C /* BattleshipUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DE141C34C26200E5B02C /* BattleshipUITests.swift */; };
 		B3A5DE231C37579F00E5B02C /* Phage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DE221C37579F00E5B02C /* Phage.swift */; };
+		B3A5DE2F1C3DF50000E5B02C /* Bullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DE2E1C3DF50000E5B02C /* Bullet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		B3A5DE141C34C26200E5B02C /* BattleshipUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleshipUITests.swift; sourceTree = "<group>"; };
 		B3A5DE161C34C26200E5B02C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3A5DE221C37579F00E5B02C /* Phage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phage.swift; sourceTree = "<group>"; };
+		B3A5DE2E1C3DF50000E5B02C /* Bullet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bullet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				B3A5DDFD1C34C26200E5B02C /* LaunchScreen.storyboard */,
 				B3A5DE001C34C26200E5B02C /* Info.plist */,
 				B3A5DE221C37579F00E5B02C /* Phage.swift */,
+				B3A5DE2E1C3DF50000E5B02C /* Bullet.swift */,
 			);
 			path = Battleship;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			files = (
 				B3A5DDF51C34C26200E5B02C /* GameScene.swift in Sources */,
 				B3A5DDF71C34C26200E5B02C /* GameViewController.swift in Sources */,
+				B3A5DE2F1C3DF50000E5B02C /* Bullet.swift in Sources */,
 				B3A5DDF11C34C26200E5B02C /* AppDelegate.swift in Sources */,
 				B3A5DE231C37579F00E5B02C /* Phage.swift in Sources */,
 			);
