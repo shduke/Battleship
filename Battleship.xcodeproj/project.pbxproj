@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B32855181C3F7F1D0079F80C /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32855171C3F7F1D0079F80C /* MainMenuViewController.swift */; };
 		B3A5DDF11C34C26200E5B02C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DDF01C34C26200E5B02C /* AppDelegate.swift */; };
 		B3A5DDF31C34C26200E5B02C /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B3A5DDF21C34C26200E5B02C /* GameScene.sks */; };
 		B3A5DDF51C34C26200E5B02C /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A5DDF41C34C26200E5B02C /* GameScene.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B32855171C3F7F1D0079F80C /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		B3A5DDED1C34C26200E5B02C /* Battleship.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Battleship.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3A5DDF01C34C26200E5B02C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3A5DDF21C34C26200E5B02C /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				B3A5DDF61C34C26200E5B02C /* GameViewController.swift */,
 				B3A5DDF81C34C26200E5B02C /* Main.storyboard */,
 				B3A5DDFB1C34C26200E5B02C /* Assets.xcassets */,
+				B32855171C3F7F1D0079F80C /* MainMenuViewController.swift */,
 				B3A5DDFD1C34C26200E5B02C /* LaunchScreen.storyboard */,
 				B3A5DE001C34C26200E5B02C /* Info.plist */,
 				B3A5DE221C37579F00E5B02C /* Phage.swift */,
@@ -271,6 +274,7 @@
 			files = (
 				B3A5DDF51C34C26200E5B02C /* GameScene.swift in Sources */,
 				B3A5DDF71C34C26200E5B02C /* GameViewController.swift in Sources */,
+				B32855181C3F7F1D0079F80C /* MainMenuViewController.swift in Sources */,
 				B3A5DE2F1C3DF50000E5B02C /* Bullet.swift in Sources */,
 				B3A5DDF11C34C26200E5B02C /* AppDelegate.swift in Sources */,
 				B3A5DE231C37579F00E5B02C /* Phage.swift in Sources */,
