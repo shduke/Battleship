@@ -15,13 +15,12 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
 
         if let scene = GameScene(fileNamed:"GameScene") {
-            // Configure the view.
             let skView = self.view as! SKView
             scene.viewController = self
             scene.size = skView.bounds.size
-            skView.showsFPS = true
-            skView.showsNodeCount = false
-            skView.showsPhysics = true
+            //skView.showsFPS = true
+            //skView.showsNodeCount = false
+            //skView.showsPhysics = true
             /* Sprite Kit applies additional optimizations to improve rendering performance */
             skView.ignoresSiblingOrder = true
             
@@ -32,6 +31,7 @@ class GameViewController: UIViewController {
         }
     }
 
+    
     override func shouldAutorotate() -> Bool {
         return true
     }
@@ -52,4 +52,8 @@ class GameViewController: UIViewController {
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    /*deinit {
+        print("GameViewController was de-allocated")
+    }*/
 }

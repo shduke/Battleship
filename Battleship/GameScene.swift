@@ -10,8 +10,26 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+   
+    struct bitMasks {
+        static let none : UInt32 = 0x0
+        static let blue : UInt32 = 0x1 << 0 //same team
+        static let red : UInt32 = 0x1 << 1  //other team
+        static let gray : UInt32 = 0x1 << 2 //neutral
+        static let bullet : UInt32 = 0x1 << 3
+    }
+    
+    struct zPositions {
+        static let bullet: CGFloat = 90
+        static let phage: CGFloat = 100
+        static let label: CGFloat = 110
+        static let pausedTint: CGFloat = 200
+        static let whiteOutline: CGFloat = 210
+        static let pausedLabel: CGFloat = 220
+    }
+    
     var score = 0
-    var viewController: UIViewController?
+    weak var viewController: UIViewController?
     var time = 0
     var timer: NSTimer?
     var level = 1
@@ -30,24 +48,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var nextLevel: SKLabelNode?
     
-    struct bitMasks {
-        static let none : UInt32 = 0x0
-        static let blue : UInt32 = 0x1 << 0 //same team
-        static let red : UInt32 = 0x1 << 1  //other team
-        static let gray : UInt32 = 0x1 << 2 //neutral
-        static let bullet : UInt32 = 0x1 << 3
-       // static let ownself : UInt32 = 0x1 << 31
-    }
-    
-    struct zPositions {
-        static let bullet: CGFloat = 90
-        static let phage: CGFloat = 100
-        static let label: CGFloat = 110
-        static let pausedTint: CGFloat = 200
-        static let whiteOutline: CGFloat = 210
-        static let pausedLabel: CGFloat = 220
-    }
-    
     func updateTimer() {
         time++
         scoreLabel?.text = String(time)
@@ -56,13 +56,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         /* initializes the game board */
         gameBoard()
-        ///print(self.children)
+    }
+    
+    func initializeLabel(phage: Phage) -> SKLabelNode {
+        let strengthLabel = SKLabelNode(fontNamed: "Arial")
+        strengthLabel.fontSize = CGFloat(max(20, phage.strength/2))
+        strengthLabel.fontColor = UIColor.blackColor()
+        strengthLabel.text = String(phage.strength)
+        strengthLabel.position = phage.position
+        strengthLabel.zPosition = GameScene.zPositions.label
+        strengthLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+        strengthLabel.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
+        
+        guard (phage.rechargeTime != 0) else {return strengthLabel}
+        let actionwait = SKAction.waitForDuration(Double(1/phage.rechargeTime))
+        // increment timer
+        let actionrun = SKAction.runBlock({
+            [weak phage] in
+            phage?.strengthLabel?.text = String(++phage!.strength)
+        })
+        let firstRunSequence = SKAction.sequence([SKAction.runBlock({
+            [weak phage] in
+            phage?.strengthLabel?.text = String(phage!.strength)}), actionwait])
+        let runSequence = SKAction.sequence([actionrun, actionwait])
+        strengthLabel.runAction(SKAction.sequence([firstRunSequence, SKAction.repeatActionForever(runSequence)]), withKey: "runStrengthLabel")
+        // repeats sequence forever
+        return strengthLabel
     }
     
     func gameBoard() {
         self.physicsWorld.contactDelegate = self
         self.backgroundColor = SKColor.whiteColor()
         winFlag = false
+        loseFlag = false
+        
         /* timer-score Label */
         scoreLabel = SKLabelNode(fontNamed: "Arial")
         scoreLabel?.fontSize = 30
@@ -85,11 +112,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         levelLabel?.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Top
         levelLabel?.zPosition = zPositions.label
         levelLabel?.text = "Level \(level)"
-        print(levelLabel?.frame)
         self.addChild(levelLabel!)
         
         /* pause label */
-        print(scoreLabel?.frame.width)
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "pause"))
         pauseButton?.size = CGSize(width: (levelLabel?.frame.size.height)!, height: (levelLabel?.frame.size.height)!)
         pauseButton?.position = CGPoint(x: 0, y: (scene?.frame.size.height)! * 1.0)
@@ -102,10 +127,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         /* places phages */
         let phageBlue = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.1), team: "Blue")
+        phageBlue.strengthLabel = initializeLabel(phageBlue)
         let phageRed = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.87), team: "Red")
+        phageRed.strengthLabel = initializeLabel(phageRed)
         let phageGray1 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 4, y: (scene?.frame.size.height)! / 2), team: "Gray")
+        phageGray1.strengthLabel = initializeLabel(phageGray1)
         let phageGray2 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! / 2), team: "Gray")
+        phageGray2.strengthLabel = initializeLabel(phageGray2)
         let phageGray3 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! * 0.75, y: (scene?.frame.size.height)! / 2), team: "Gray")
+        phageGray3.strengthLabel = initializeLabel(phageGray3)
         self.addChild(phageBlue)
         self.addChild(phageBlue.strengthLabel!)
         self.addChild(phageRed)
@@ -128,7 +158,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != bluePhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        //bluePhage.strengthLabel.text? = String(bluePhage.strength + bullet.strength)
+                        bluePhage.strengthLabel?.text = String(bluePhage.strength + bullet.strength)
                         let sumStrength = bluePhage.strength + bullet.strength
                         if(sumStrength > bluePhage.maxCap) {
                             bluePhage.strength = bluePhage.maxCap
@@ -144,6 +174,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             bluePhage.removeFromParent()
                             let newPhage = Phage(coordinate: bluePhage.coordinate, team: "Red")
                             newPhage.strength = abs(bluePhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
@@ -161,7 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != bluePhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        //bluePhage.strengthLabel.text? = String(bluePhage.strength + bullet.strength)
+                        bluePhage.strengthLabel?.text = String(bluePhage.strength + bullet.strength)
                         let sumStrength = bluePhage.strength + bullet.strength
                         if(sumStrength > bluePhage.maxCap) {
                             bluePhage.strength = bluePhage.maxCap
@@ -170,13 +201,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             bluePhage.strength = sumStrength
                         }
                     case "Red":
-                        bluePhage.strengthLabel?.text? = String(bluePhage.strength - bullet.strength)
+                        bluePhage.strengthLabel?.text = String(bluePhage.strength - bullet.strength)
                         bluePhage.strength -= bullet.strength
                         if(bluePhage.strength < 0) {
                             bluePhage.strengthLabel?.removeFromParent()
                             bluePhage.removeFromParent()
                             let newPhage = Phage(coordinate: bluePhage.coordinate, team: "Red")
                             newPhage.strength = abs(bluePhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
@@ -196,18 +228,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != redPhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        redPhage.strengthLabel?.text? = String(redPhage.strength - bullet.strength)
+                        redPhage.strengthLabel?.text = String(redPhage.strength - bullet.strength)
                         redPhage.strength -= bullet.strength
                         if(redPhage.strength < 0) {
                             redPhage.strengthLabel?.removeFromParent()
                             redPhage.removeFromParent()
                             let newPhage = Phage(coordinate: redPhage.coordinate, team: "Blue")
                             newPhage.strength = abs(redPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
                     case "Red":
-                        //redPhage.strengthLabel.text? = String(redPhage.strength + bullet.strength)
+                        redPhage.strengthLabel?.text = String(redPhage.strength + bullet.strength)
                         let sumStrength = redPhage.strength + bullet.strength
                         if(sumStrength > redPhage.maxCap) {
                             redPhage.strength = redPhage.maxCap
@@ -229,18 +262,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != redPhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        redPhage.strengthLabel?.text? = String(redPhage.strength - bullet.strength)
+                        redPhage.strengthLabel?.text = String(redPhage.strength - bullet.strength)
                         redPhage.strength -= bullet.strength
                         if(redPhage.strength < 0) {
                             redPhage.strengthLabel?.removeFromParent()
                             redPhage.removeFromParent()
                             let newPhage = Phage(coordinate: redPhage.coordinate, team: "Blue")
                             newPhage.strength = abs(redPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
                     case "Red":
-                        //redPhage.strengthLabel.text? = String(redPhage.strength + bullet.strength)
+                        redPhage.strengthLabel?.text = String(redPhage.strength + bullet.strength)
                         let sumStrength = redPhage.strength + bullet.strength
                         if(sumStrength > redPhage.maxCap) {
                             redPhage.strength = redPhage.maxCap
@@ -264,24 +298,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != grayPhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        grayPhage.strengthLabel?.text? = String(grayPhage.strength - bullet.strength)
+                        grayPhage.strengthLabel?.text = String(grayPhage.strength - bullet.strength)
                         grayPhage.strength -= bullet.strength
                         if(grayPhage.strength < 0) {
                             grayPhage.strengthLabel?.removeFromParent()
                             grayPhage.removeFromParent()
                             let newPhage = Phage(coordinate: grayPhage.coordinate, team: "Blue")
                             newPhage.strength = abs(grayPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
                     case "Red":
-                        grayPhage.strengthLabel?.text? = String(grayPhage.strength - bullet.strength)
+                        grayPhage.strengthLabel?.text = String(grayPhage.strength - bullet.strength)
                         grayPhage.strength -= bullet.strength
                         if(grayPhage.strength < 0) {
                             grayPhage.strengthLabel?.removeFromParent()
                             grayPhage.removeFromParent()
                             let newPhage = Phage(coordinate: grayPhage.coordinate, team: "Red")
                             newPhage.strength = abs(grayPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
@@ -299,24 +335,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     guard(bullet.senderName != grayPhage.name) else {return}
                     switch teamBullet {
                     case "Blue":
-                        grayPhage.strengthLabel?.text? = String(grayPhage.strength - bullet.strength)
+                        grayPhage.strengthLabel?.text = String(grayPhage.strength - bullet.strength)
                         grayPhage.strength -= bullet.strength
                         if(grayPhage.strength < 0) {
                             grayPhage.strengthLabel?.removeFromParent()
                             grayPhage.removeFromParent()
                             let newPhage = Phage(coordinate: grayPhage.coordinate, team: "Blue")
                             newPhage.strength = abs(grayPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
                     case "Red":
-                        grayPhage.strengthLabel?.text? = String(grayPhage.strength - bullet.strength)
+                        grayPhage.strengthLabel?.text = String(grayPhage.strength - bullet.strength)
                         grayPhage.strength -= bullet.strength
                         if(grayPhage.strength < 0) {
                             grayPhage.strengthLabel?.removeFromParent()
                             grayPhage.removeFromParent()
                             let newPhage = Phage(coordinate: grayPhage.coordinate, team: "Red")
                             newPhage.strength = abs(grayPhage.strength)
+                            newPhage.strengthLabel = initializeLabel(newPhage)
                             self.addChild(newPhage)
                             self.addChild(newPhage.strengthLabel!)
                         }
@@ -329,13 +367,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
     }
-        
-    var senderPhage: Phage?
     
-    func getDesiredNodeAtPoint<T>(point: CGPoint, type: T) -> T? {
+    weak var senderPhage: Phage?
+    
+    func getDesiredNodeAtPoint(point: CGPoint) -> Phage? {
         let nodeArray = nodesAtPoint(point)
         for node in nodeArray {
-            if let found = node as? T {
+            if let found = node as? Phage {
                 return found
             }
         }
@@ -409,13 +447,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         for touch in touches {
             let startLocation = touch.locationInNode(self)
-            if let selectedPhage = getDesiredNodeAtPoint(startLocation, type: Phage()) where selectedPhage.team == "Blue" {
+            if let selectedPhage = getDesiredNodeAtPoint(startLocation) where selectedPhage.team == "Blue" {
                 senderPhage = selectedPhage
             }
             else {
-                print("Here 1")
                 senderPhage = nil
-                //if let otherPhage = node as? Phage where otherPhage.name?.containsString("Red") == false {
                 if let didPause = nodeAtPoint(startLocation) as? SKSpriteNode where didPause.name == "pause" {
                     pauseButtonClicked()
                 }
@@ -432,14 +468,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     gameBoard()
                 }
                 else if let clickedMenu = nodeAtPoint(startLocation) as? SKLabelNode where clickedMenu.name == "menu" {
+                    winFlag = true
+                    loseFlag = true
                     removeAllChildren()
                     removeAllActions()
                     self.paused = false
                     time = 0
                     senderPhage = nil
                     level = 1
-                    //let mainMenu = MainMenuViewController()
-                    self.viewController?.performSegueWithIdentifier("toMainMenu", sender: viewController)
+                    viewController?.dismissViewControllerAnimated(false, completion: nil)
+                    return
                 }
                 else if let nextLevel = nodeAtPoint(startLocation) as? SKLabelNode where nextLevel.name == "nextLevel" {
                     removeAllChildren()
@@ -478,7 +516,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let startNode = senderPhage {
                 guard(startNode.strength != 0) else {return} //checks case for shooting
                 let endLocation = touch.locationInNode(self)
-                if let endNode = getDesiredNodeAtPoint(endLocation, type: Phage()) {
+                if let endNode = getDesiredNodeAtPoint(endLocation) {
                     guard(startNode.name != endNode.name) else {return} //checks for different node
                     let bullet = Bullet(shooter: startNode)
                     bullet.position = startNode.position
@@ -648,38 +686,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var loseFlag = false
     
     override func update(currentTime: CFTimeInterval) {
-        print("# Nodes: \(self.children.count)")
-        var blueCount = 0
-        var redCount = 0
-        print("Phages: \(Phage.phageCount), Labels: \(Phage.phageLabelCount), Bullets: \(Bullet.bulletCount)")
-        enumerateChildNodesWithName("phage.*") { node, _ in
-            if let phage = node as? Phage  {
-                let team = phage.team
-                switch team {
-                    case "Blue":
-                        blueCount++
-                    case "Red":
-                        redCount++
-                default:
-                    break
-                }
-            }
-        }
-        if(redCount == 0 && winFlag == false) {
+        if(Phage.redPhageCount == 0 && winFlag == false) {
             enumerateChildNodesWithName("*") { node, _ in
                 node.paused = true
             }
             winFlag = true
             win()
         }
-        else if(blueCount == 0 && winFlag == false) {
+        else if(Phage.bluePhageCount == 0 && loseFlag == false) {
             enumerateChildNodesWithName("*") { node, _ in
                 node.paused = true
             }
             loseFlag = true
             lose()
-            
         }
-        /* Called before each frame is rendered */
-    }
+          }
+    
+    /*deinit {
+        print("Scene was de-allocated")
+    }*/
+    
 }

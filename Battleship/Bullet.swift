@@ -40,7 +40,7 @@ class Bullet: SKSpriteNode {
     
     deinit {
         Bullet.bulletCount--
-        print("Bullet was deleted")
+//        print("Bullet was deleted")
     }
     
    /* func escapeSelf() {

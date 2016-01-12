@@ -28,6 +28,8 @@ class MainMenuViewController: UIViewController {
         return
     }
     
-    /*override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    /*deinit {
+        print("MainMenuViewController was de-allocated")
     }*/
+
 }

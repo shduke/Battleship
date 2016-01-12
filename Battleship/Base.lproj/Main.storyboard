@@ -50,7 +50,13 @@
                             <constraint firstItem="rmN-zA-SZF" firstAttribute="top" secondItem="hew-65-Xaj" secondAttribute="bottom" constant="97" id="sw4-QC-XcB"/>
                             <constraint firstItem="0yY-Sg-yxS" firstAttribute="centerX" secondItem="1DG-1M-fg5" secondAttribute="centerX" id="wgI-wa-Bgp"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="eTp-4w-WxX"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="NlR-n1-fpK"/>
                     <connections>
                         <outlet property="highscoreLabel" destination="0yY-Sg-yxS" id="jdp-wS-cVH"/>
                         <outlet property="levelLabel" destination="hew-65-Xaj" id="Czp-RC-po5"/>
