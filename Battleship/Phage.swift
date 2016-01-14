@@ -76,7 +76,7 @@ class Phage: SKSpriteNode {
             self.color = UIColor.redColor()
             self.colorBlendFactor = 1.0
         default:
-            self.strength = (1 + Int(arc4random_uniform(4))) * 10
+            self.strength = (1 + Int(arc4random_uniform(2))) * 10
             self.rechargeTime = 0
             self.color = UIColor.grayColor()
             self.colorBlendFactor = 1.0

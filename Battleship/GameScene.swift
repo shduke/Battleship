@@ -9,6 +9,16 @@
 import SpriteKit
 import GameplayKit
 
+extension CGPoint: Hashable {
+    public var hashValue: Int {
+        return self.x.hashValue << sizeof(CGFloat) ^ self.y.hashValue
+    }
+}
+
+public func ==(lhs: CGPoint, rhs: CGPoint) -> Bool {
+    return CGPointEqualToPoint(lhs, rhs)
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
    
     struct bitMasks {
@@ -126,26 +136,96 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(pauseButton!)
         
         /* places phages */
+        
+        phagePlacement()
+        
+//        let phageBlue = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.1), team: "Blue")
+//        phageBlue.strengthLabel = initializeLabel(phageBlue)
+//        let phageRed = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.87), team: "Red")
+//        phageRed.strengthLabel = initializeLabel(phageRed)
+//        let phageGray1 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 4, y: (scene?.frame.size.height)! / 2), team: "Gray")
+//        phageGray1.strengthLabel = initializeLabel(phageGray1)
+//        let phageGray2 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! / 2), team: "Gray")
+//        phageGray2.strengthLabel = initializeLabel(phageGray2)
+//        let phageGray3 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! * 0.75, y: (scene?.frame.size.height)! / 2), team: "Gray")
+//        phageGray3.strengthLabel = initializeLabel(phageGray3)
+//        self.addChild(phageBlue)
+//        self.addChild(phageBlue.strengthLabel!)
+//        self.addChild(phageRed)
+//        self.addChild(phageRed.strengthLabel!)
+//        self.addChild(phageGray1)
+//        self.addChild(phageGray1.strengthLabel!)
+//        self.addChild(phageGray2)
+//        self.addChild(phageGray2.strengthLabel!)
+//        self.addChild(phageGray3)
+//        self.addChild(phageGray3.strengthLabel!)
+    }
+    
+    func randomElementIndex<T>(s: Set<T>) -> T {
+        let n = Int(arc4random_uniform(UInt32(s.count)))
+        let i = s.startIndex.advancedBy(n)
+        return s[i]
+    }
+    
+    func addPhage(coordinate: CGPoint, team: String) {
+        let newPhage = Phage(coordinate: coordinate, team: team)
+        newPhage.strengthLabel = initializeLabel(newPhage)
+        self.addChild(newPhage)
+        self.addChild(newPhage.strengthLabel!)
+    }
+    
+    func removePoints(inout availiblePoints: Set<CGPoint>, point: CGPoint, size: CGSize) {
+        let xRange = max(0, Int(point.x - (size.width) * 1.2))...min(Int(self.frame.size.width), Int(point.x + (size.width) * 1.2))
+        let yRange = max(0, Int(point.y - (size.height) * 1.2))...min(Int(self.frame.size.height), Int(point.y + (size.height) * 1.2))
+        var removePoints: Set<CGPoint> = []
+        for x in xRange {
+            for y in yRange {
+                let removePoint = CGPoint(x: x, y: y)
+                removePoints.insert(removePoint)
+            }
+        }
+        availiblePoints.subtractInPlace(removePoints)
+    }
+    
+    func phagePlacement() {
+        var phageArray: [Phage] = []
+        var availiblePoints: Set<CGPoint> = []
+        let amount = 1 + arc4random_uniform(7)
+        
+        /* Generates set of all possible points*/
+        let newPhage = Phage(coordinate: CGPoint(x: 100, y: 100), team: "Gray")
+        let xRange = Int((newPhage.size.width / 2) * 1.2)...Int(self.frame.size.width - (newPhage.size.width / 2) * 1.2)
+        let yRange = Int((newPhage.size.height / 2) * 1.2)...Int(self.frame.size.height * 0.87 - (newPhage.size.height / 2) * 1.2)
+        for x in xRange {
+            for y in yRange {
+                let newPoint = CGPoint(x: x, y: y)
+                availiblePoints.insert(newPoint)
+            }
+        }
+        /* adds the phages */
         let phageBlue = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.1), team: "Blue")
         phageBlue.strengthLabel = initializeLabel(phageBlue)
+        removePoints(&availiblePoints, point: phageBlue.position, size: phageBlue.size)
         let phageRed = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.87), team: "Red")
         phageRed.strengthLabel = initializeLabel(phageRed)
-        let phageGray1 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 4, y: (scene?.frame.size.height)! / 2), team: "Gray")
-        phageGray1.strengthLabel = initializeLabel(phageGray1)
-        let phageGray2 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! / 2), team: "Gray")
-        phageGray2.strengthLabel = initializeLabel(phageGray2)
-        let phageGray3 = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! * 0.75, y: (scene?.frame.size.height)! / 2), team: "Gray")
-        phageGray3.strengthLabel = initializeLabel(phageGray3)
+        removePoints(&availiblePoints, point: phageRed.position, size: phageRed.size)
+        for _ in 1...amount {
+            guard(availiblePoints.count > 0) else {return }
+            let newPosition = randomElementIndex(availiblePoints)
+            let newPhage = Phage(coordinate: newPosition, team: "Gray")
+            newPhage.strengthLabel = initializeLabel(newPhage)
+            removePoints(&availiblePoints, point: newPosition, size: newPhage.size)
+            phageArray.append(newPhage)
+
+        }
         self.addChild(phageBlue)
         self.addChild(phageBlue.strengthLabel!)
         self.addChild(phageRed)
         self.addChild(phageRed.strengthLabel!)
-        self.addChild(phageGray1)
-        self.addChild(phageGray1.strengthLabel!)
-        self.addChild(phageGray2)
-        self.addChild(phageGray2.strengthLabel!)
-        self.addChild(phageGray3)
-        self.addChild(phageGray3.strengthLabel!)
+        for phage in phageArray {
+            self.addChild(phage)
+            self.addChild(phage.strengthLabel!)
+        }
     }
     
     /* collision tree (Kind of like not being able to pass over nodes, to fix add reciever instance var to bullet and another gaurd statement)*/
