@@ -5,8 +5,6 @@
 //  Created by Sean Hudson on 12/30/15.
 //  Copyright © 2015 Sean Hudson. All rights reserved.
 //
-// HERBERT DID YOU SEE THIS???
-//TESTING
 import UIKit
 
 @UIApplicationMain

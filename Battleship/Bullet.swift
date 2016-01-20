@@ -42,14 +42,5 @@ class Bullet: SKSpriteNode {
         Bullet.bulletCount--
 //        print("Bullet was deleted")
     }
-    
-   /* func escapeSelf() {
-        let waitRadius = SKAction.waitForDuration(NSTimeInterval(self.size.width + 3 / CGFloat(bulletSpeed)))
-        let changeBitMask = SKAction.runBlock({
-            self.physicsBody?.categoryBitMask = GameScene.bitMasks.bullet
-            self.physicsBody?.contactTestBitMask = (GameScene.bitMasks.blue | GameScene.bitMasks.red | GameScene.bitMasks.gray)
-        })
-        let escapeSequence = SKAction.sequence([waitRadius, changeBitMask])
-        runAction(escapeSequence)
-    }*/
+
 }

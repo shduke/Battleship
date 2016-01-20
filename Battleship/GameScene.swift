@@ -57,6 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var resumeLabel: SKLabelNode?
 
     var nextLevel: SKLabelNode?
+    var availiblePoints: Set<CGPoint> = []
     
     func updateTimer() {
         time++
@@ -65,6 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMoveToView(view: SKView) {
         /* initializes the game board */
+        generatePoints()
         gameBoard()
     }
     
@@ -174,7 +176,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(newPhage.strengthLabel!)
     }
     
-    func removePoints(inout availiblePoints: Set<CGPoint>, point: CGPoint, size: CGSize) {
+    func removePoints(inout availiblePointsSet: Set<CGPoint>, point: CGPoint, size: CGSize) {
         let xRange = max(0, Int(point.x - (size.width) * 1.2))...min(Int(self.frame.size.width), Int(point.x + (size.width) * 1.2))
         let yRange = max(0, Int(point.y - (size.height) * 1.2))...min(Int(self.frame.size.height), Int(point.y + (size.height) * 1.2))
         var removePoints: Set<CGPoint> = []
@@ -184,15 +186,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 removePoints.insert(removePoint)
             }
         }
-        availiblePoints.subtractInPlace(removePoints)
+        availiblePointsSet.subtractInPlace(removePoints)
     }
     
-    func phagePlacement() {
-        var phageArray: [Phage] = []
-        var availiblePoints: Set<CGPoint> = []
-        let amount = 1 + arc4random_uniform(7)
-        
-        /* Generates set of all possible points*/
+    /* Generates set of all possible points*/
+    func generatePoints() {
         let newPhage = Phage(coordinate: CGPoint(x: 100, y: 100), team: "Gray")
         let xRange = Int((newPhage.size.width / 2) * 1.2)...Int(self.frame.size.width - (newPhage.size.width / 2) * 1.2)
         let yRange = Int((newPhage.size.height / 2) * 1.2)...Int(self.frame.size.height * 0.87 - (newPhage.size.height / 2) * 1.2)
@@ -202,19 +200,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 availiblePoints.insert(newPoint)
             }
         }
+    }
+    
+    func phagePlacement() {
+        var phageArray: [Phage] = []
+        let amount = 1 + arc4random_uniform(7)
+        var copyPointsSet = availiblePoints
         /* adds the phages */
         let phageBlue = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.1), team: "Blue")
         phageBlue.strengthLabel = initializeLabel(phageBlue)
-        removePoints(&availiblePoints, point: phageBlue.position, size: phageBlue.size)
+        removePoints(&copyPointsSet, point: phageBlue.position, size: phageBlue.size)
         let phageRed = Phage(coordinate: CGPoint(x: (scene?.frame.size.width)! / 2, y: (scene?.frame.size.height)! * 0.87), team: "Red")
         phageRed.strengthLabel = initializeLabel(phageRed)
-        removePoints(&availiblePoints, point: phageRed.position, size: phageRed.size)
+        removePoints(&copyPointsSet, point: phageRed.position, size: phageRed.size)
         for _ in 1...amount {
-            guard(availiblePoints.count > 0) else {return }
-            let newPosition = randomElementIndex(availiblePoints)
+            guard(copyPointsSet.count > 0) else {return }
+            let newPosition = randomElementIndex(copyPointsSet)
             let newPhage = Phage(coordinate: newPosition, team: "Gray")
             newPhage.strengthLabel = initializeLabel(newPhage)
-            removePoints(&availiblePoints, point: newPosition, size: newPhage.size)
+            removePoints(&copyPointsSet, point: newPosition, size: newPhage.size)
             phageArray.append(newPhage)
 
         }
